@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { body, matchedData, query, validationResult } from 'express-validator';
+import { matchedData, validationResult, checkSchema } from 'express-validator';
+import { createEmployeeSchema, employeeQuerySchema } from '../utils/validationSchemas.mjs';
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get('/employees', (req, res) => {
   res.status(200).send(employeeList);
 });
 
-router.post('/employee', [body('name').notEmpty().withMessage('Name field must not be empty!').isLength({ min: 3 }).withMessage('Name field must be at least 3 characters!'), body('email').isEmail().withMessage('Must be a valid email!').notEmpty().withMessage('Email field must not be empty!').isLength({ min: 3 }).withMessage('Email field must be at least 3 characters!')], (req, res) => {
+router.post('/employee', checkSchema(createEmployeeSchema), (req, res) => {
   const validationRes = validationResult(req);
 
 
@@ -59,9 +60,12 @@ router.get('/employee/:id', (req, res) => {
   }
 });
 
-router.get('/employee', query('name').isString().notEmpty().withMessage('Must not be empty!').isLength({ min: 3 }).withMessage('Must be 3 characters minimum!'), (req, res) => {
+router.get('/employee', checkSchema(employeeQuerySchema), (req, res) => {
   const validationRes = validationResult(req);
-  console.log(validationRes)
+
+  if (!validationRes.isEmpty()) {
+    return res.status(400).send({ errors: validationRes.array() })
+  }
   const { query } = req;
   let results = [];
   Object.keys(query)
