@@ -75,6 +75,8 @@ router.get('/employee', checkSchema(employeeQuerySchema), (req, res) => {
 		results = [...results, ...employeeItems];
 	});
 
+	res.cookie('queryParam', JSON.stringify(query), { maxAge: 10000 });
+
 	res.status(200).send(results);
 });
 
