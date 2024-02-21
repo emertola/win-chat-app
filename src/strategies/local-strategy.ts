@@ -1,8 +1,8 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
-import { mockUsers } from '../utils/constants.mjs';
+import { mockUsers } from '../utils/constants.ts';
 
-passport.serializeUser((user, done) => {
+passport.serializeUser((user: any, done) => {
 	done(null, user.id);
 });
 
@@ -31,7 +31,7 @@ passport.use(
 			}
 			done(null, findUser);
 		} catch (error) {
-			done(error, null);
+			done(error, false);
 		}
 	})
 );
