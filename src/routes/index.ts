@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import employeeRouter from './employee.route.ts';
-import authRouter from './auth.route.ts';
-import pokemonRouter from './pokemon.route.ts';
+import employeeRouter from './employee.route';
+import authRouter from './auth.route';
+import pokemonRouter from './pokemon.route';
 
 const router = Router();
 
