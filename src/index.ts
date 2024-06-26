@@ -3,10 +3,14 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import routes from './routes';
+import dotenv from 'dotenv';
 import './strategies/local-strategy';
+import mongoConnect from './db/mongodb-connect.config';
+
+dotenv.config();
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -17,4 +21,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/v1', routes);
 
-app.listen(PORT, () => console.log(`Running express server on PORT ${PORT}`));
+app.listen(PORT, () => {
+  mongoConnect();
+  console.log(`Running express server on PORT ${PORT}`);
+});
